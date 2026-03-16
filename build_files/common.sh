@@ -11,6 +11,11 @@ set -ouex pipefail
 
 dnf5 install -y tmux
 
+# Ghostty
+dnf5 copr enable -y scottames/ghostty
+dnf5 install -y ghostty
+dnf5 copr disable -y scottames/ghostty
+
 ### Remove packages
 dnf5 remove -y ibus virtualbox-guest-additions
 dnf5 autoremove -y
