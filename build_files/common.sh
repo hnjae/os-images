@@ -9,7 +9,10 @@ set -ouex pipefail
 # List of rpmfusion packages can be found here:
 # https://mirrors.rpmfusion.org/mirrorlist?path=free/fedora/updates/43/x86_64/repoview/index.html&protocol=https&redirect=1
 
-dnf5 install -y tmux
+# Terra repository
+dnf5 install -y --nogpgcheck --repofrompath 'terra,https://repos.fyralabs.com/terra$releasever' terra-release
+
+dnf5 install -y tmux sarasa-gothic-fonts
 
 # Ghostty
 dnf5 copr enable -y scottames/ghostty
