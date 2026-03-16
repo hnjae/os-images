@@ -27,8 +27,13 @@ concurrency:
 
 jobs:
   build_push:
-    name: Build and push image
+    name: Build and push image (${{ matrix.variant }})
     runs-on: ubuntu-24.04
+
+    strategy:
+      fail-fast: false
+      matrix:
+        variant: [desktop, htpc]
 
     permissions:
       contents: read
@@ -78,8 +83,8 @@ jobs:
             org.opencontainers.image.created=${{ steps.date.outputs.date }}
             org.opencontainers.image.description=${{ env.IMAGE_DESC }}
             org.opencontainers.image.documentation=https://raw.githubusercontent.com/${{ github.repository_owner }}/${{ env.IMAGE_NAME }}/${{ github.sha }}/README.md
-            org.opencontainers.image.source=https://github.com/${{ github.repository_owner }}/${{ env.IMAGE_NAME }}/blob/${{ github.sha }}/Containerfile
-            org.opencontainers.image.title=${{ env.IMAGE_NAME }}
+            org.opencontainers.image.source=https://github.com/${{ github.repository_owner }}/${{ env.IMAGE_NAME }}/blob/${{ github.sha }}/Containerfile.${{ matrix.variant }}
+            org.opencontainers.image.title=${{ env.IMAGE_NAME }}-${{ matrix.variant }}
             org.opencontainers.image.url=https://github.com/${{ github.repository_owner }}/${{ env.IMAGE_NAME }}/tree/${{ github.sha }}
             org.opencontainers.image.vendor=${{ github.repository_owner }}
             org.opencontainers.image.version=${{ env.DEFAULT_TAG }}.{{date 'YYYYMMDD'}}
@@ -97,10 +102,10 @@ jobs:
         uses: redhat-actions/buildah-build@7a95fa7ee0f02d552a32753e7414641a04307056 # v2
         with:
           containerfiles: |
-            ./Containerfile
+            ./Containerfile.${{ matrix.variant }}
           # Postfix image name with -custom to make it a little more descriptive
           # Syntax: https://docs.github.com/en/actions/learn-github-actions/expressions#format
-          image: ${{ env.IMAGE_NAME }}
+          image: ${{ env.IMAGE_NAME }}-${{ matrix.variant }}
           tags: ${{ steps.metadata.outputs.tags }}
           labels: ${{ steps.metadata.outputs.labels }}
           oci: false
@@ -148,7 +153,7 @@ jobs:
           REGISTRY_PASSWORD: ${{ github.token }}
         with:
           registry: ${{ env.IMAGE_REGISTRY }}
-          image: ${{ env.IMAGE_NAME }}
+          image: ${{ env.IMAGE_NAME }}-${{ matrix.variant }}
           tags: ${{ steps.metadata.outputs.tags }}
           username: ${{ env.REGISTRY_USER }}
           password: ${{ env.REGISTRY_PASSWORD }}
@@ -166,7 +171,7 @@ jobs:
       - name: Sign container image
         if: github.event_name != 'pull_request' && github.ref == format('refs/heads/{0}', github.event.repository.default_branch)
         run: |
-          IMAGE_FULL="${{ env.IMAGE_REGISTRY }}/${{ env.IMAGE_NAME }}"
+          IMAGE_FULL="${{ env.IMAGE_REGISTRY }}/${{ env.IMAGE_NAME }}-${{ matrix.variant }}"
           for tag in ${{ steps.metadata.outputs.tags }}; do
             cosign sign -y --key env://COSIGN_PRIVATE_KEY $IMAGE_FULL:$tag
           done

@@ -86,7 +86,8 @@ sudoif command *args:
 #
 
 # Build the image using the specified parameters
-build $target_image=image_name $tag=default_tag:
+# variant: "desktop" or "htpc"
+build variant="desktop" $target_image=image_name $tag=default_tag:
     #!/usr/bin/env bash
 
     BUILD_ARGS=()
@@ -97,7 +98,8 @@ build $target_image=image_name $tag=default_tag:
     podman build \
         "${BUILD_ARGS[@]}" \
         --pull=newer \
-        --tag "${target_image}:${tag}" \
+        --file "Containerfile.{{ variant }}" \
+        --tag "${target_image}-{{ variant }}:${tag}" \
         .
 
 # Command: _rootful_load_image
