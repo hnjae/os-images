@@ -12,7 +12,7 @@ set -ouex pipefail
 # Terra repository
 dnf5 install -y --nogpgcheck --repofrompath 'terra,https://repos.fyralabs.com/terra$releasever' terra-release
 
-dnf5 install -y tmux sarasa-gothic-fonts nerd-fonts
+dnf5 install -y tmux zsh sarasa-gothic-fonts nerd-fonts
 
 # Ghostty
 dnf5 copr enable -y scottames/ghostty
