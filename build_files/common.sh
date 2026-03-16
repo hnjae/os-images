@@ -19,6 +19,12 @@ dnf5 copr enable -y scottames/ghostty
 dnf5 install -y ghostty
 dnf5 copr disable -y scottames/ghostty
 
+# Pretendard font
+PRETENDARD_VERSION=1.3.9
+curl -fsSL "https://github.com/orioncactus/pretendard/releases/download/v${PRETENDARD_VERSION}/Pretendard-${PRETENDARD_VERSION}.zip" -o /tmp/pretendard.zip
+unzip -q /tmp/pretendard.zip "public/static/*.otf" -d /tmp/pretendard
+install -Dm644 /tmp/pretendard/public/static/*.otf -t /usr/share/fonts/OTF
+
 ### Remove packages
 dnf5 remove -y ibus virtualbox-guest-additions
 dnf5 autoremove -y
