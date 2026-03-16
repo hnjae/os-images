@@ -20,5 +20,8 @@ dnf5 copr disable -y scottames/ghostty
 dnf5 remove -y ibus virtualbox-guest-additions
 dnf5 autoremove -y
 
-#### Example for enabling a System Unit File
+### System configuration
+echo "options hid_apple fnmode=2" > /etc/modprobe.d/hid_apple.conf
+
+### Systemd services
 systemctl enable podman.socket
