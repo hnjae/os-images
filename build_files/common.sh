@@ -12,7 +12,7 @@ set -ouex pipefail
 dnf5 install -y tmux
 
 ### Remove packages
-dnf5 remove -y ibus
+dnf5 remove -y ibus virtualbox-guest-additions
 dnf5 autoremove -y
 
 #### Example for enabling a System Unit File
