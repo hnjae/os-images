@@ -10,12 +10,12 @@ set -ouex pipefail
 # https://mirrors.rpmfusion.org/mirrorlist?path=free/fedora/updates/43/x86_64/repoview/index.html&protocol=https&redirect=1
 
 # Terra repository
-if ! dnf5 repolist --enabled | grep -q terra; then
+if ! rpm -q terra-release &>/dev/null; then
     # shellcheck disable=SC2016
     dnf5 install -y --nogpgcheck --repofrompath 'terra,https://repos.fyralabs.com/terra$releasever' terra-release
 fi
 
-dnf5 install -y tmux zsh sarasa-gothic-fonts nerd-fonts
+dnf5 install -y --skip-unavailable tmux zsh sarasa-gothic-fonts nerd-fonts
 
 # Ghostty
 dnf5 copr enable -y scottames/ghostty
