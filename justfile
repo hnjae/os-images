@@ -11,36 +11,16 @@ alias run-vm := run-vm-qcow2
 default:
     @just --list
 
-# Check Just Syntax
-[group('Just')]
+[group('ci')]
 check:
     #!/usr/bin/env bash
-    find . -type f -name "*.just" | while read -r file; do
-    	echo "Checking syntax: $file"
-    	just --unstable --fmt --check -f $file
-    done
-
-    echo "Checking syntax: Justfile"
-    just --unstable --fmt --check -f Justfile
-
-    find . -type f -name "*.sh" | while read -r file; do
-    	echo "Checking syntax: $file"
-        shellcheck "$file"
-    done
-
-    echo "Checking syntax: Markdown"
+    set -euo pipefail
+    find . -type f -name "*.sh" -exec shellcheck {} +
     rumdl check --check
 
-# Fix Just Syntax
-[group('Just')]
-fix:
-    #!/usr/bin/env bash
-    find . -type f -name "*.just" | while read -r file; do
-    	echo "Checking syntax: $file"
-    	just --unstable --fmt -f $file
-    done
-    echo "Checking syntax: Justfile"
-    just --unstable --fmt -f Justfile || { exit 1; }
+[group('ci')]
+format:
+    prek run --all-files
 
 # Clean Repo
 [group('Utility')]
@@ -79,6 +59,7 @@ sudoif command *args:
     sudoif {{ command }} {{ args }}
 
 # Build container image
+
 # Example: just build desktop latest
 [group('Build')]
 build variant=default_variant $tag=default_tag:
@@ -258,18 +239,3 @@ spawn-vm rebuild="0" type="qcow2" ram="6G":
       --network-user-mode \
       --vsock=false --pass-ssh-key=false \
       -i ./output/**/*.{{ type }}
-
-# Runs shell check on all Bash scripts
-lint:
-    #!/usr/bin/env bash
-    set -eoux pipefail
-    # Check if shellcheck is installed
-    if ! command -v shellcheck &> /dev/null; then
-        echo "shellcheck could not be found. Please install it."
-        exit 1
-    fi
-    # Run shellcheck on all Bash scripts
-    /usr/bin/find . -iname "*.sh" -type f -exec shellcheck "{}" ';'
-
-format:
-    prek run --all-files
