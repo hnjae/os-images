@@ -8,6 +8,7 @@ source /ctx/common.sh
 ### Desktop-specific packages and settings
 
 # 1Password
+mkdir -p /var/opt
 rpm --import https://downloads.1password.com/linux/keys/1password.asc
 cat >/etc/yum.repos.d/1password.repo <<'REPO'
 [1password]
