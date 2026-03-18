@@ -2,13 +2,14 @@
 
 set -ouex pipefail
 
+# shellcheck disable=SC1091
 source /ctx/common.sh
 
 ### Desktop-specific packages and settings
 
 # 1Password
 rpm --import https://downloads.1password.com/linux/keys/1password.asc
-cat > /etc/yum.repos.d/1password.repo <<'REPO'
+cat >/etc/yum.repos.d/1password.repo <<'REPO'
 [1password]
 name=1Password Stable Channel
 baseurl=https://downloads.1password.com/linux/rpm/stable/$basearch

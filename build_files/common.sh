@@ -10,6 +10,7 @@ set -ouex pipefail
 # https://mirrors.rpmfusion.org/mirrorlist?path=free/fedora/updates/43/x86_64/repoview/index.html&protocol=https&redirect=1
 
 # Terra repository
+# shellcheck disable=SC2016
 dnf5 install -y --nogpgcheck --repofrompath 'terra,https://repos.fyralabs.com/terra$releasever' terra-release
 
 dnf5 install -y tmux zsh sarasa-gothic-fonts nerd-fonts
@@ -30,7 +31,7 @@ dnf5 remove -y ibus virtualbox-guest-additions
 dnf5 autoremove -y
 
 ### System configuration
-echo "options hid_apple fnmode=2" > /etc/modprobe.d/hid_apple.conf
+echo "options hid_apple fnmode=2" >/etc/modprobe.d/hid_apple.conf
 
 ### Systemd services
 systemctl enable podman.socket
