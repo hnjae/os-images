@@ -1,0 +1,9 @@
+[global]
+flavor = "standard"
+disable = [
+  "MD013", # line-length
+  "MD033", # no-inline-html
+]
+
+[MD007] # ul-indent
+indent = 4

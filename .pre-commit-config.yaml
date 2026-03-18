@@ -1,0 +1,56 @@
+repos:
+  - repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v6.0.0
+    hooks:
+      - id: detect-private-key
+        fail_fast: true
+      - id: check-added-large-files
+      - id: check-json
+      - id: check-yaml
+      - id: check-toml
+      - id: check-xml
+  - repo: local
+    hooks:
+      - id: yamlfmt
+        name: format yaml
+        entry: yamlfmt
+        language: system
+        types: [yaml]
+      - id: rumdl-fmt
+        name: format markdown
+        entry: rumdl fmt
+        language: system
+        types: [markdown]
+      - id: just-fmt
+        name: format just
+        entry: just --fmt --unstable --justfile
+        language: system
+        files: (^|/)(\.)?justfile$
+      - id: taplo-format
+        name: format toml
+        entry: taplo format
+        language: system
+        types: [toml]
+  - repo: local
+    hooks:
+      - id: shellharden
+        name: harden shell
+        entry: shellharden --replace
+        language: system
+        files: &shell_files |
+          (?x)^(
+            .*\.(sh|bash)$|
+            \.envrc(\..+)?$|
+            \.env(\..+)?$|
+            \.profile$
+          )
+      - id: shellcheck
+        name: check shell
+        entry: shellcheck
+        language: system
+        files: *shell_files
+      - id: shfmt
+        name: format shell
+        entry: shfmt --indent 4 --simplify --write
+        language: system
+        files: *shell_files

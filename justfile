@@ -18,8 +18,17 @@ check:
     	echo "Checking syntax: $file"
     	just --unstable --fmt --check -f $file
     done
+
     echo "Checking syntax: Justfile"
     just --unstable --fmt --check -f Justfile
+
+    find . -type f -name "*.sh" | while read -r file; do
+    	echo "Checking syntax: $file"
+        shellcheck "$file"
+    done
+
+    echo "Checking syntax: Markdown"
+    rumdl check --check
 
 # Fix Just Syntax
 [group('Just')]
@@ -307,14 +316,5 @@ lint:
     # Run shellcheck on all Bash scripts
     /usr/bin/find . -iname "*.sh" -type f -exec shellcheck "{}" ';'
 
-# Runs shfmt on all Bash scripts
 format:
-    #!/usr/bin/env bash
-    set -eoux pipefail
-    # Check if shfmt is installed
-    if ! command -v shfmt &> /dev/null; then
-        echo "shellcheck could not be found. Please install it."
-        exit 1
-    fi
-    # Run shfmt on all Bash scripts
-    /usr/bin/find . -iname "*.sh" -type f -exec shfmt --write "{}" ';'
+    prek run --all-files
