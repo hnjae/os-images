@@ -1,4 +1,4 @@
-export image_name := env("IMAGE_NAME", "image-template") # output image name, usually same as repo name, change as needed
+export image_name := env("IMAGE_NAME", "image-template")
 export default_tag := env("DEFAULT_TAG", "latest")
 export bib_image := env("BIB_IMAGE", "quay.io/centos-bootc/bootc-image-builder:latest")
 
@@ -13,7 +13,7 @@ default:
 # Check Just Syntax
 [group('Just')]
 check:
-    #!/usr/bin/bash
+    #!/usr/bin/env bash
     find . -type f -name "*.just" | while read -r file; do
     	echo "Checking syntax: $file"
     	just --unstable --fmt --check -f $file
@@ -24,7 +24,7 @@ check:
 # Fix Just Syntax
 [group('Just')]
 fix:
-    #!/usr/bin/bash
+    #!/usr/bin/env bash
     find . -type f -name "*.just" | while read -r file; do
     	echo "Checking syntax: $file"
     	just --unstable --fmt -f $file
@@ -35,7 +35,7 @@ fix:
 # Clean Repo
 [group('Utility')]
 clean:
-    #!/usr/bin/bash
+    #!/usr/bin/env bash
     set -eoux pipefail
     touch _build
     find *_build* -exec rm -rf {} \;
@@ -54,7 +54,7 @@ sudo-clean:
 [group('Utility')]
 [private]
 sudoif command *args:
-    #!/usr/bin/bash
+    #!/usr/bin/env bash
     function sudoif(){
         if [[ "${UID}" -eq 0 ]]; then
             "$@"
@@ -84,8 +84,8 @@ sudoif command *args:
 #
 # This will build an image 'aurora:lts' with DX and GDX enabled.
 #
-
 # Build the image using the specified parameters
+
 # variant: "desktop" or "htpc"
 build variant="desktop" $target_image=image_name $tag=default_tag:
     #!/usr/bin/env bash
@@ -194,33 +194,33 @@ _build-bib $target_image $tag $type $config: (_rootful_load_image target_image t
 #   target_image: The name of the image to build (ex. localhost/fedora)
 #   tag: The tag of the image to build (ex. latest)
 #   type: The type of image to build (ex. qcow2, raw, iso)
-#   config: The configuration file to use for the build (deafult: disk_config/disk.toml)
+#   config: The configuration file to use for the build (default: disk_config/disk.toml)
 
 # Example: just _rebuild-bib localhost/fedora latest qcow2 disk_config/disk.toml
 _rebuild-bib $target_image $tag $type $config: (build target_image tag) && (_build-bib target_image tag type config)
 
 # Build a QCOW2 virtual machine image
-[group('Build Virtal Machine Image')]
+[group('Build Virtual Machine Image')]
 build-qcow2 $target_image=("localhost/" + image_name) $tag=default_tag: && (_build-bib target_image tag "qcow2" "disk_config/disk.toml")
 
 # Build a RAW virtual machine image
-[group('Build Virtal Machine Image')]
+[group('Build Virtual Machine Image')]
 build-raw $target_image=("localhost/" + image_name) $tag=default_tag: && (_build-bib target_image tag "raw" "disk_config/disk.toml")
 
 # Build an ISO virtual machine image
-[group('Build Virtal Machine Image')]
+[group('Build Virtual Machine Image')]
 build-iso $target_image=("localhost/" + image_name) $tag=default_tag: && (_build-bib target_image tag "iso" "disk_config/iso.toml")
 
 # Rebuild a QCOW2 virtual machine image
-[group('Build Virtal Machine Image')]
+[group('Build Virtual Machine Image')]
 rebuild-qcow2 $target_image=("localhost/" + image_name) $tag=default_tag: && (_rebuild-bib target_image tag "qcow2" "disk_config/disk.toml")
 
 # Rebuild a RAW virtual machine image
-[group('Build Virtal Machine Image')]
+[group('Build Virtual Machine Image')]
 rebuild-raw $target_image=("localhost/" + image_name) $tag=default_tag: && (_rebuild-bib target_image tag "raw" "disk_config/disk.toml")
 
 # Rebuild an ISO virtual machine image
-[group('Build Virtal Machine Image')]
+[group('Build Virtual Machine Image')]
 rebuild-iso $target_image=("localhost/" + image_name) $tag=default_tag: && (_rebuild-bib target_image tag "iso" "disk_config/iso.toml")
 
 # Run a virtual machine with the specified image type and configuration
@@ -266,19 +266,19 @@ _run-vm $target_image $tag $type $config:
     podman run "${run_args[@]}"
 
 # Run a virtual machine from a QCOW2 image
-[group('Run Virtal Machine')]
+[group('Run Virtual Machine')]
 run-vm-qcow2 $target_image=("localhost/" + image_name) $tag=default_tag: && (_run-vm target_image tag "qcow2" "disk_config/disk.toml")
 
 # Run a virtual machine from a RAW image
-[group('Run Virtal Machine')]
+[group('Run Virtual Machine')]
 run-vm-raw $target_image=("localhost/" + image_name) $tag=default_tag: && (_run-vm target_image tag "raw" "disk_config/disk.toml")
 
 # Run a virtual machine from an ISO
-[group('Run Virtal Machine')]
+[group('Run Virtual Machine')]
 run-vm-iso $target_image=("localhost/" + image_name) $tag=default_tag: && (_run-vm target_image tag "iso" "disk_config/iso.toml")
 
 # Run a virtual machine using systemd-vmspawn
-[group('Run Virtal Machine')]
+[group('Run Virtual Machine')]
 spawn-vm rebuild="0" type="qcow2" ram="6G":
     #!/usr/bin/env bash
 
@@ -294,7 +294,6 @@ spawn-vm rebuild="0" type="qcow2" ram="6G":
       --network-user-mode \
       --vsock=false --pass-ssh-key=false \
       -i ./output/**/*.{{ type }}
-
 
 # Runs shell check on all Bash scripts
 lint:
