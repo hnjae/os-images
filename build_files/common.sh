@@ -15,12 +15,7 @@ if ! rpm -q terra-release &>/dev/null; then
     dnf5 install -y --nogpgcheck --repofrompath 'terra,https://repos.fyralabs.com/terra$releasever' terra-release
 fi
 
-dnf5 install -y --skip-unavailable tmux zsh sarasa-gothic-fonts nerd-fonts
-
-# Ghostty
-dnf5 copr enable -y scottames/ghostty
-dnf5 install -y ghostty
-dnf5 copr disable -y scottames/ghostty
+dnf5 install -y --skip-unavailable tmux zsh sarasa-gothic-fonts nerd-fonts ghostty
 
 # Pretendard font
 PRETENDARD_VERSION=1.3.9
