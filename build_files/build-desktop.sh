@@ -33,3 +33,6 @@ dnf5 install \
     1password brave-browser firefox
 
 rm -f /etc/yum.repos.d/1password.repo
+
+# Declare 1password system group via sysusers.d (bootc lint compliance)
+echo 'g onepassword - -' >/usr/lib/sysusers.d/onepassword.conf
