@@ -9,13 +9,10 @@ set -ouex pipefail
 # List of rpmfusion packages can be found here:
 # https://mirrors.rpmfusion.org/mirrorlist?path=free/fedora/updates/43/x86_64/repoview/index.html&protocol=https&redirect=1
 
-# Terra repository
-if ! rpm -q terra-release &>/dev/null; then
-    # shellcheck disable=SC2016
-    dnf5 install -y --nogpgcheck --repofrompath 'terra,https://repos.fyralabs.com/terra$releasever' terra-release
-fi
-
-dnf5 install -y --skip-unavailable tmux zsh sarasa-gothic-fonts nerd-fonts ghostty
+dnf5 install --assumeyes --enablerepo=terra,terra-extras,terra-mesa \
+    sarasa-gothic-fonts \
+    nerd-fonts \
+    ghostty
 
 # Pretendard font
 PRETENDARD_VERSION=1.3.9
@@ -24,7 +21,7 @@ unzip -q /tmp/pretendard.zip "public/static/*.otf" -d /tmp/pretendard
 install -Dm644 /tmp/pretendard/public/static/*.otf -t /usr/share/fonts/OTF
 
 ### Remove packages
-dnf5 remove -y ibus virtualbox-guest-additions
+dnf5 remove --assumeyes ibus virtualbox-guest-additions nano nano-default-editor
 dnf5 autoremove -y
 
 ### System configuration
