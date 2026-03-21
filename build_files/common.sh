@@ -21,7 +21,10 @@ unzip -q /tmp/pretendard.zip "public/static/*.otf" -d /tmp/pretendard
 install -Dm644 /tmp/pretendard/public/static/*.otf -t /usr/share/fonts/OTF
 
 ### Remove packages
-dnf5 remove --assumeyes ibus virtualbox-guest-additions nano nano-default-editor
+dnf5 remove --assumeyes \
+    ibus virtualbox-guest-additions \
+    nano nano-default-editor \
+    waydroid
 dnf5 autoremove -y
 
 ### System configuration
