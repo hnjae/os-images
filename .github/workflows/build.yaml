@@ -1,3 +1,4 @@
+---
 name: Build container image
 on:
   pull_request:

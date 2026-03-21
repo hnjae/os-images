@@ -1,3 +1,4 @@
+---
 name: Build disk images
 on:
   workflow_dispatch:
@@ -19,7 +20,7 @@ on:
     paths:
       - './disk_config/disk.toml'
       - './disk_config/iso.toml'
-      - './.github/workflows/build-disk.yml'
+      - './.github/workflows/build-disk.yaml'
 env:
   IMAGE_NAME: ${{ github.event.repository.name }} # output of build.yml, keep in sync
   IMAGE_REGISTRY: "ghcr.io/${{ github.repository_owner }}" # do not edit
