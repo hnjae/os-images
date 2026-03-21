@@ -9,9 +9,12 @@ set -ouex pipefail
 # List of rpmfusion packages can be found here:
 # https://mirrors.rpmfusion.org/mirrorlist?path=free/fedora/updates/43/x86_64/repoview/index.html&protocol=https&redirect=1
 
-dnf5 install --assumeyes --enablerepo=terra,terra-extras,terra-mesa \
-    sarasa-gothic-fonts \
-    nerd-fonts \
+dnf5 install \
+    --setopt=install_weak_deps=True \
+    --enablerepo=terra,terra-extras,terra-mesa \
+    --assumeyes \
+    zsh \
+    sarasa-gothic-fonts nerd-fonts \
     ghostty
 
 # Pretendard font
