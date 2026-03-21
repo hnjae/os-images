@@ -32,6 +32,3 @@ dnf5 autoremove -y
 
 ### System configuration
 echo "options hid_apple fnmode=2" >/etc/modprobe.d/hid_apple.conf
-
-### Systemd services
-systemctl enable podman.socket
