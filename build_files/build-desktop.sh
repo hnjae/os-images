@@ -22,5 +22,14 @@ gpgcheck=1
 repo_gpgcheck=1
 gpgkey=https://downloads.1password.com/linux/keys/1password.asc
 REPO
-dnf5 install -y 1password
+
+curl -fsSLo /etc/yum.repos.d/brave-browser.repo \
+    https://brave-browser-rpm-release.s3.brave.com/brave-browser.repo
+
+dnf5 install \
+    --setopt=install_weak_deps=True \
+    --enablerepo=terra,terra-extras,terra-mesa \
+    --assumeyes \
+    1password brave-browser firefox
+
 rm -f /etc/yum.repos.d/1password.repo
