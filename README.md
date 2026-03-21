@@ -1,165 +1,101 @@
-# image-template
+# os-images
 
-This repository is meant to be a template for building your own custom [bootc](https://github.com/bootc-dev/bootc) image. This template is the recommended way to make customizations to any image published by the Universal Blue Project.
+※ Opus 4.6 작성
 
-## Community
+[Universal Blue](https://universal-blue.org/) 프로젝트의 [Bazzite](https://bazzite.gg/) 이미지를 기반으로 커스터마이징한 [bootc](https://github.com/bootc-dev/bootc) 컨테이너 이미지 빌드 시스템이다.
 
-If you have questions about this template after following the instructions, try the following spaces:
+## 특징
 
-- [Universal Blue Forums](https://universal-blue.discourse.group/)
-- [Universal Blue Discord](https://discord.gg/WEu6BdFEtp)
-- [bootc discussion forums](https://github.com/bootc-dev/bootc/discussions) - This is not an Universal Blue managed space, but is an excellent resource if you run into issues with building bootc images.
+- **Variant 기반 빌드**: desktop(Bazzite), HTPC(Bazzite-Deck) 등 용도별 이미지를 분리하여 관리한다.
+- **2-stage Containerfile**: `FROM scratch AS ctx` 패턴으로 빌드 스크립트를 bind mount하여 최종 이미지에 불필요한 레이어를 남기지 않는다.
+- **디스크 이미지 생성**: [bootc-image-builder](https://osbuild.org/docs/bootc/)를 통해 QCOW2, RAW, ISO 디스크 이미지를 생성할 수 있다.
 
-## Step 3: Switch to Your Image
+## 빌드 요구 사항
 
-From your bootc system, run the following command substituting in your Github username and image name where noted.
+- [Podman](https://podman.io/)
+- [Just](https://just.systems/) (Universal Blue 이미지에 기본 포함)
+- 디스크 이미지 빌드 시 rootful Podman 필요
 
-```bash
-sudo bootc switch ghcr.io/<username>/<image_name>
-```
+## 사용법
 
-This should queue your image for the next reboot, which you can do immediately after the command finishes. You have officially set up your custom image! See the following section for an explanation of the important parts of the template for customization.
-
-## Repository Contents
-
-## Containerfile
-
-The `Containerfile.*` defines the operations used to customize the selected image.This file is the entrypoint for your image build, and works exactly like a regular podman Containerfile. For reference, please see the [Podman Documentation](https://docs.podman.io/en/latest/Introduction.html).
-
-## build.sh
-
-The `build-*.sh` file is called from your Containerfile. It is the best place to install new packages or make any other customization to your system. There are customization examples contained within it for your perusal.
-
-## build.yml
-
-The [build.yaml](./.github/workflows/build.yaml) Github Actions workflow creates your custom OCI image and publishes it to the Github Container Registry (GHCR). By default, the image name will match the Github repository name. There are several environment variables at the start of the workflow which may be of interest to change.
-
-## Building Disk Images
-
-This template provides an out of the box workflow for creating disk images (ISO, qcow, raw) for your custom OCI image which can be used to directly install onto your machines.
-
-This template provides a way to upload the disk images that is generated from the workflow to a S3 bucket. The disk images will also be available as an artifact from the job, if you wish to use an alternate provider. To upload to S3 we use [rclone](https://rclone.org/) which is able to use [many S3 providers](https://rclone.org/s3/).
-
-## Setting Up ISO Builds
-
-The [build-disk.yaml](./.github/workflows/build-disk.yaml) Github Actions workflow creates a disk image from your OCI image by utilizing the [bootc-image-builder](https://osbuild.org/docs/bootc/). In order to use this workflow you must complete the following steps:
-
-1. Modify `disk_config/iso.toml` to point to your custom container image before generating an ISO image.
-2. If you changed your image name from the default in `build.yml` then in the `build-disk.yml` file edit the `IMAGE_REGISTRY`, `IMAGE_NAME` and `DEFAULT_TAG` environment variables with the correct values. If you did not make changes, skip this step.
-3. Finally, if you want to upload your disk images to S3 then you will need to add your S3 configuration to the repository's Action secrets. This can be found by going to your repository settings, under `Secrets and Variables` -> `Actions`. You will need to add the following
-   - `S3_PROVIDER` - Must match one of the values from the [supported list](https://rclone.org/s3/)
-   - `S3_BUCKET_NAME` - Your unique bucket name
-   - `S3_ACCESS_KEY_ID` - It is recommended that you make a separate key just for this workflow
-   - `S3_SECRET_ACCESS_KEY` - See above.
-   - `S3_REGION` - The region your bucket lives in. If you do not know then set this value to `auto`.
-   - `S3_ENDPOINT` - This value will be specific to the bucket as well.
-
-Once the workflow is done, you'll find the disk images either in your S3 bucket or as part of the summary under `Artifacts` after the workflow is completed.
-
-## Artifacthub
-
-This template comes with the necessary tooling to index your image on [artifacthub.io](https://artifacthub.io). Use the `artifacthub-repo.yml` file at the root to verify yourself as the publisher. This is important to you for a few reasons:
-
-- The value of artifacthub is it's one place for people to index their custom images, and since we depend on each other to learn, it helps grow the community.
-- You get to see your pet project listed with the other cool projects in Cloud Native.
-- Since the site puts your README front and center, it's a good way to learn how to write a good README, learn some marketing, finding your audience, etc.
-
-[Discussion Thread](https://universal-blue.discourse.group/t/listing-your-custom-image-on-artifacthub/6446)
-
-## Justfile Documentation
-
-The `Justfile` contains various commands and configurations for building and managing container images and virtual machine images using Podman and other utilities.
-To use it, you must have installed [just](https://just.systems/man/en/introduction.html) from your package manager or manually. It is available by default on all Universal Blue images.
-
-## Environment Variables
-
-- `image_name`: The name of the image (default: "image-template").
-- `default_tag`: The default tag for the image (default: "latest").
-- `bib_image`: The Bootc Image Builder (BIB) image (default: "quay.io/centos-bootc/bootc-image-builder:latest").
-
-## Building The Image
-
-### `just build`
-
-Builds a container image using Podman.
+### OCI 컨테이너 이미지 빌드
 
 ```bash
-just build $target_image $tag
+just build [variant=desktop] [tag=latest]
 ```
 
-Arguments:
-
-- `$target_image`: The tag you want to apply to the image (default: `$image_name`).
-- `$tag`: The tag for the image (default: `$default_tag`).
-
-## Building and Running Virtual Machines and ISOs
-
-The below commands all build QCOW2 images. To produce or use a different type of image, substitute in the command with that type in the place of `qcow2`. The available types are `qcow2`, `iso`, and `raw`.
-
-### `just build-qcow2`
-
-Builds a QCOW2 virtual machine image.
+### 디스크 이미지 빌드
 
 ```bash
-just build-qcow2 $target_image $tag
+just build-qcow2 [variant=desktop] [tag=latest]
+just build-raw [variant=desktop] [tag=latest]
+just build-iso [variant=desktop] [tag=latest]
 ```
 
-### `just rebuild-qcow2`
-
-Rebuilds a QCOW2 virtual machine image.
+`rebuild-*` 명령은 컨테이너 이미지를 다시 빌드한 뒤 디스크 이미지를 생성한다.
 
 ```bash
-just rebuild-vm $target_image $tag
+just rebuild-qcow2 [variant=desktop] [tag=latest]
 ```
 
-### `just run-vm-qcow2`
-
-Runs a virtual machine from a QCOW2 image.
+### 가상 머신 실행
 
 ```bash
-just run-vm-qcow2 $target_image $tag
+# QEMU (브라우저 VNC 접속)
+just run-vm-qcow2 [variant=desktop] [tag=latest]
+
+# systemd-vmspawn
+just spawn-vm [rebuild=0] [type=qcow2] [ram=6G]
 ```
 
-### `just spawn-vm`
-
-Runs a virtual machine using systemd-vmspawn.
+### 코드 검사 및 포매팅
 
 ```bash
-just spawn-vm rebuild="0" type="qcow2" ram="6G"
+just check    # pre-merge-commit 훅 실행
+just format   # pre-commit 훅 실행
+just clean    # 빌드 아티팩트 제거
 ```
 
-## File Management
+## 이미지 전환
 
-### `just check`
+bootc 시스템에서 다음 명령으로 이미지를 전환할 수 있다.
 
-Checks the syntax of all `.just` files and the `Justfile`.
+```bash
+sudo bootc switch ghcr.io/hnjae/os-images-<variant>:latest
+```
 
-### `just fix`
+## 이미지 서명 검증
 
-Fixes the syntax of all `.just` files and the `Justfile`.
+배포된 이미지는 cosign으로 서명되어 있으며, 리포지토리의 `cosign.pub` 키로 검증할 수 있다.
 
-### `just clean`
+```bash
+cosign verify --key cosign.pub ghcr.io/<username>/os-images-<variant>:latest
+```
 
-Cleans the repository by removing build artifacts.
+## CI/CD 설정
 
-### `just lint`
+### OCI 이미지 빌드 (build.yaml)
 
-Runs shell check on all Bash scripts.
+main 브랜치 push, 매일 10:05 UTC, PR 시 자동 실행된다. 빌드된 이미지는 GHCR에 push되고 cosign으로 서명된다.
 
-### `just format`
+### 디스크 이미지 빌드 (build-disk.yaml)
 
-Runs shfmt on all Bash scripts.
+수동 dispatch 또는 `disk_config/` 변경 시 실행된다. 빌드 결과물은 GitHub Actions artifact로 다운로드하거나 S3에 업로드할 수 있다.
 
-## Additional resources
+S3 업로드를 위해 다음 시크릿을 설정해야 한다:
 
-For additional driver support, ublue maintains a set of scripts and container images available at [ublue-akmod](https://github.com/ublue-os/akmods). These images include the necessary scripts to install multiple kernel drivers within the container (Nvidia, OpenRazer, Framework...). The documentation provides guidance on how to properly integrate these drivers into your container image.
+- `S3_PROVIDER` — [rclone 지원 목록](https://rclone.org/s3/) 참조
+- `S3_BUCKET_NAME`
+- `S3_ACCESS_KEY_ID`
+- `S3_SECRET_ACCESS_KEY`
+- `S3_REGION`
+- `S3_ENDPOINT`
 
-## Community Examples
+### cosign 키 설정
 
-These are images derived from this template (or similar enough to this template). Reference them when building your image!
+```bash
+COSIGN_PASSWORD="" cosign generate-key-pair
+gh secret set SIGNING_SECRET < cosign.key
+```
 
-- [m2Giles' OS](https://github.com/m2giles/m2os)
-- [bOS](https://github.com/bsherman/bos)
-- [Homer](https://github.com/bketelsen/homer/)
-- [Amy OS](https://github.com/astrovm/amyos)
-- [VeneOS](https://github.com/Venefilyn/veneos)
+비밀번호 없이 키를 생성해야 한다.
