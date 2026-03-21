@@ -7,11 +7,7 @@ insert_final_newline = true
 trim_trailing_whitespace = true
 tab_width = 8
 
-[{justfile.justfile}]
-indent_size = 4
-indent_style = space
-
-[*.{yml,yaml}]
+[*.{yaml,toml,json,jsonc}]
 indent_size = 2
 indent_style = space
 
@@ -19,14 +15,31 @@ indent_style = space
 indent_size = 4
 indent_style = space
 
-[*.{sh,bash,fish,zsh}]
+[{justfile,.justfile}]
 indent_size = 4
 indent_style = space
+
+[*.{sh,bash,fish,zsh,nu}]
+indent_size = 4
+indent_style = space
+max_line_length = 80
 
 [.{env,envrc}]
 indent_size = 4
 indent_style = space
+max_line_length = 80
 
 [.{env,envrc}.*]
 indent_size = 4
+indent_style = space
+max_line_length = 80
+
+[*.nix]
+indent_size = 2
+indent_style = space
+max_line_length = 100
+
+[*.py]
+indent_size = 4
+max_line_length = 79
 indent_style = space

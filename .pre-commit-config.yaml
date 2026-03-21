@@ -1,3 +1,4 @@
+---
 repos:
   - repo: https://github.com/pre-commit/pre-commit-hooks
     rev: v6.0.0
@@ -16,9 +17,21 @@ repos:
         entry: yamlfmt
         language: system
         types: [yaml]
-      - id: rumdl-fmt
+      - id: taplo-format
+        name: format toml
+        entry: taplo format
+        language: system
+        types: [toml]
+      - id: biome-format-json
+        name: format json
+        entry: biome format --write
+        language: system
+        files: \.(jsonc?)$
+  - repo: local
+    hooks:
+      - id: rumdl-format
         name: format markdown
-        entry: rumdl fmt
+        entry: rumdl check --fix
         language: system
         types: [markdown]
       - id: just-fmt
@@ -26,11 +39,6 @@ repos:
         entry: just --fmt --unstable --justfile
         language: system
         files: (^|/)(\.)?justfile$
-      - id: taplo-format
-        name: format toml
-        entry: taplo format
-        language: system
-        types: [toml]
   - repo: local
     hooks:
       - id: shellharden
@@ -49,8 +57,17 @@ repos:
         entry: shellcheck
         language: system
         files: *shell_files
+        stages: [pre-commit, pre-merge-commit, pre-push]
       - id: shfmt
         name: format shell
         entry: shfmt --indent 4 --simplify --write
         language: system
         files: *shell_files
+  - repo: local
+    hooks:
+      - id: rumdl-check
+        name: check markdown
+        entry: rumdl check
+        language: system
+        types: [markdown]
+        stages: [pre-merge-commit, pre-push]

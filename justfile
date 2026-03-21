@@ -12,15 +12,12 @@ default:
     @just --list
 
 [group('ci')]
-check:
-    #!/usr/bin/env bash
-    set -euo pipefail
-    find . -type f -name "*.sh" -exec shellcheck {} +
-    rumdl check --check
+format:
+    prek run --hook-stage pre-commit --all-files
 
 [group('ci')]
-format:
-    prek run --all-files
+check:
+    prek run --hook-stage pre-merge-commit --all-files
 
 # Clean Repo
 [group('Utility')]
