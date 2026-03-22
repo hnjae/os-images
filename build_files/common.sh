@@ -29,8 +29,10 @@ dnf5 remove --assumeyes \
     ibus virtualbox-guest-additions \
     nano nano-default-editor \
     zram-generator \
-    waydroid
-dnf5 autoremove -y
+    waydroid \
+    webapp-manager duf btop \
+    ffmpeg opus-tools
+dnf5 autoremove --assumeyes
 
 ### System configuration
 echo "options hid_apple fnmode=2" >/etc/modprobe.d/hid_apple.conf
