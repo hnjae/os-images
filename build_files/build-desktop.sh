@@ -30,7 +30,7 @@ dnf5 install \
     --setopt=install_weak_deps=True \
     --enablerepo=terra,terra-extras,terra-mesa \
     --assumeyes \
-    1password brave-browser firefox
+    1password 1password-cli brave-browser firefox
 
 rm -f /etc/yum.repos.d/1password.repo
 
