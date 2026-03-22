@@ -15,6 +15,7 @@ dnf5 install \
     --assumeyes \
     zsh \
     sarasa-gothic-fonts nerd-fonts \
+    podman-docker \
     ghostty
 
 # Pretendard font
