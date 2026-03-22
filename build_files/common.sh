@@ -11,7 +11,7 @@ set -ouex pipefail
 
 dnf5 install \
     --setopt=install_weak_deps=True \
-    --enablerepo=terra,terra-extras,terra-mesa \
+    --enablerepo=terra,terra-extras,terra-mesa,rpmfusion-free,rpmfusion-nonfree \
     --assumeyes \
     zsh \
     sarasa-gothic-fonts nerd-fonts \

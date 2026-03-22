@@ -28,11 +28,9 @@ curl -fsSLo /etc/yum.repos.d/brave-browser.repo \
 
 dnf5 install \
     --setopt=install_weak_deps=True \
-    --enablerepo=terra,terra-extras,terra-mesa \
+    --enablerepo=terra,terra-extras,terra-mesa,rpmfusion-free,rpmfusion-nonfree \
     --assumeyes \
     1password 1password-cli brave-browser firefox
-
-rm -f /etc/yum.repos.d/1password.repo
 
 # Declare 1password system group via sysusers.d (bootc lint compliance)
 echo 'g onepassword - -' >/usr/lib/sysusers.d/onepassword.conf
