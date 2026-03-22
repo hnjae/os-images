@@ -28,6 +28,7 @@ install -Dm644 /tmp/pretendard/public/static/*.otf -t /usr/share/fonts/OTF
 dnf5 remove --assumeyes \
     ibus virtualbox-guest-additions \
     nano nano-default-editor \
+    zram-generator \
     waydroid
 dnf5 autoremove -y
 
