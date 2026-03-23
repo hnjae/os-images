@@ -6,3 +6,6 @@ set -ouex pipefail
 source /ctx/common.sh
 
 ### HTPC-specific packages and settings
+
+### Remove packages
+dnf5 autoremove --assumeyes

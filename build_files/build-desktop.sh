@@ -34,3 +34,7 @@ dnf5 install \
 
 # Declare 1password system group via sysusers.d (bootc lint compliance)
 echo 'g onepassword - -' >/usr/lib/sysusers.d/onepassword.conf
+echo 'g onepassword-cli - -' >>/usr/lib/sysusers.d/onepassword.conf
+
+### Remove packages
+dnf5 autoremove --assumeyes
