@@ -30,8 +30,8 @@ dnf5 remove --assumeyes \
     nano nano-default-editor \
     zram-generator \
     waydroid \
-    webapp-manager duf btop \
-    ffmpeg opus-tools
+    webapp-manager duf btop
+
 dnf5 autoremove --assumeyes
 
 ### System configuration
