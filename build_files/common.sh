@@ -25,7 +25,7 @@ dnf5 mark dependency --assumeyes \
     zram-generator \
     waydroid \
     webapp-manager \
-    gnome-disk-utility filelight
+    gnome-disk-utility filelight Sunshine
 
 dnf5 install \
     --setopt=install_weak_deps=True \
