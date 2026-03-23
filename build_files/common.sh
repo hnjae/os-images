@@ -31,7 +31,18 @@ dnf5 remove --assumeyes \
     nano nano-default-editor \
     zram-generator \
     waydroid \
-    webapp-manager duf btop
+    webapp-manager duf btop \
+    hunspell-en-GB gocryptfs \
+    gnome-disk-utility filelight
+
+dnf5 mark dependency --assumeyes \
+    adwaita-mono-fonts adwaita-sans-fonts \
+    akonadi-server akonadi-server-mysql \
+    kate kate-libs kwrite kwrited \
+    fedora-bookmarks \
+    mariadb mariadb-backup mariadb-common mariadb-connector-c mariadb-connector-c-config mariadb-cracklib-password-check mariadb-errmsg mariadb-gssapi-server mariadb-server \
+    ffmpeg ffmpeg-libs lame opus-tools opusfile \
+    ntfs-3g ntfs-3g-libs ntfs-3g-system-compression
 
 dnf5 autoremove --assumeyes
 
