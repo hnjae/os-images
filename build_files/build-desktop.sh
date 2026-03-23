@@ -26,11 +26,20 @@ REPO
 curl -fsSLo /etc/yum.repos.d/brave-browser.repo \
     https://brave-browser-rpm-release.s3.brave.com/brave-browser.repo
 
+cat >/etc/yum.repos.d/fury-nushell.repo <<'REPO'
+[gemfury-nushell]
+name=Gemfury Nushell Repo
+baseurl=https://yum.fury.io/nushell/
+enabled=1
+gpgcheck=0
+gpgkey=https://yum.fury.io/nushell/gpg.key
+REPO
+
 dnf5 install \
     --setopt=install_weak_deps=True \
     --enablerepo=terra,terra-extras,terra-mesa,rpmfusion-free,rpmfusion-nonfree \
     --assumeyes \
-    1password 1password-cli brave-browser firefox
+    1password 1password-cli brave-browser firefox nushell
 
 # Declare 1password system group via sysusers.d (bootc lint compliance)
 echo 'g onepassword - -' >/usr/lib/sysusers.d/onepassword.conf
