@@ -18,9 +18,7 @@ dnf5 mark dependency --assumeyes \
     ffmpeg ffmpeg-libs lame opus-tools opusfile \
     ntfs-3g ntfs-3g-libs ntfs-3g-system-compression \
     hunspell-en-GB gocryptfs \
-    duf btop
-
-dnf5 remove --assumeyes \
+    duf btop \
     plymouth \
     ibus virtualbox-guest-additions \
     nano nano-default-editor \
