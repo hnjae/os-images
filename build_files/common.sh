@@ -27,12 +27,21 @@ dnf5 mark dependency --assumeyes \
     webapp-manager \
     gnome-disk-utility filelight Sunshine
 
+cat >/etc/yum.repos.d/fury-nushell.repo <<'REPO'
+[gemfury-nushell]
+name=Gemfury Nushell Repo
+baseurl=https://yum.fury.io/nushell/
+enabled=1
+gpgcheck=0
+gpgkey=https://yum.fury.io/nushell/gpg.key
+REPO
+
 dnf5 install \
     --setopt=install_weak_deps=True \
     --enablerepo=terra,terra-extras,terra-mesa,rpmfusion-free,rpmfusion-nonfree \
     --assumeyes \
-    zsh \
-    sarasa-gothic-fonts nerd-fonts \
+    zsh nushell \
+    sarasa-gothic-fonts \
     podman-docker \
     ghostty
 
