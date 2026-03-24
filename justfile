@@ -65,7 +65,7 @@ sudoif command *args:
 [group('bootc')]
 bootc-switch-local variant=default_variant $tag=default_tag target_image=(image_registry + "/" + image_name + "-" + variant): (build variant tag)
     #!/usr/bin/env bash
-    set -euo pipefail
+    set -euox pipefail
 
     source_image="{{ image_name }}-{{ variant }}:${tag}"
     target_image="{{ target_image }}:${tag}"
@@ -78,7 +78,7 @@ bootc-switch-local variant=default_variant $tag=default_tag target_image=(image_
 [group('bootc')]
 bootc-switch-local-apply variant=default_variant $tag=default_tag target_image=(image_registry + "/" + image_name + "-" + variant): (build variant tag)
     #!/usr/bin/env bash
-    set -euo pipefail
+    set -euox pipefail
 
     source_image="{{ image_name }}-{{ variant }}:${tag}"
     target_image="{{ target_image }}:${tag}"
