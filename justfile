@@ -1,3 +1,8 @@
+#!/usr/bin/env -S just --justfile
+
+alias fmt := format
+alias lint := check
+
 export image_registry := env("IMAGE_REGISTRY", "ghcr.io/hnjae")
 export image_name := env("IMAGE_NAME", "os-images")
 export default_variant := env("DEFAULT_VARIANT", "desktop")
