@@ -95,7 +95,7 @@ bootc-status:
 # Build container image
 
 # Example: just build desktop latest
-[group('Build')]
+[group('build')]
 build variant=default_variant $tag=default_tag:
     #!/usr/bin/env bash
 
@@ -178,27 +178,27 @@ _build-bib $target_image $tag $type $config: (_rootful_load_image target_image t
 _rebuild-bib variant $tag $type $config: (build variant tag) && (_build-bib ("localhost/" + image_name + "-" + variant) tag type config)
 
 # Build a QCOW2 virtual machine image
-[group('Build Virtual Machine Image')]
+[group('build-vm-image')]
 build-qcow2 variant=default_variant $tag=default_tag: && (_build-bib ("localhost/" + image_name + "-" + variant) tag "qcow2" "disk_config/disk.toml")
 
 # Build a RAW virtual machine image
-[group('Build Virtual Machine Image')]
+[group('build-vm-image')]
 build-raw variant=default_variant $tag=default_tag: && (_build-bib ("localhost/" + image_name + "-" + variant) tag "raw" "disk_config/disk.toml")
 
 # Build an ISO virtual machine image
-[group('Build Virtual Machine Image')]
+[group('build-vm-image')]
 build-iso variant=default_variant $tag=default_tag: && (_build-bib ("localhost/" + image_name + "-" + variant) tag "iso" "disk_config/iso.toml")
 
 # Rebuild a QCOW2 virtual machine image
-[group('Build Virtual Machine Image')]
+[group('build-vm-image')]
 rebuild-qcow2 variant=default_variant $tag=default_tag: && (_rebuild-bib variant tag "qcow2" "disk_config/disk.toml")
 
 # Rebuild a RAW virtual machine image
-[group('Build Virtual Machine Image')]
+[group('build-vm-image')]
 rebuild-raw variant=default_variant $tag=default_tag: && (_rebuild-bib variant tag "raw" "disk_config/disk.toml")
 
 # Rebuild an ISO virtual machine image
-[group('Build Virtual Machine Image')]
+[group('build-vm-image')]
 rebuild-iso variant=default_variant $tag=default_tag: && (_rebuild-bib variant tag "iso" "disk_config/iso.toml")
 
 # Run a virtual machine with the specified image type and configuration
@@ -245,19 +245,19 @@ _run-vm $target_image $tag $type $config:
     podman run "${run_args[@]}"
 
 # Run a virtual machine from a QCOW2 image
-[group('Run Virtual Machine')]
+[group('run-vm')]
 run-vm-qcow2 variant=default_variant $tag=default_tag: && (_run-vm ("localhost/" + image_name + "-" + variant) tag "qcow2" "disk_config/disk.toml")
 
 # Run a virtual machine from a RAW image
-[group('Run Virtual Machine')]
+[group('run-vm')]
 run-vm-raw variant=default_variant $tag=default_tag: && (_run-vm ("localhost/" + image_name + "-" + variant) tag "raw" "disk_config/disk.toml")
 
 # Run a virtual machine from an ISO
-[group('Run Virtual Machine')]
+[group('run-vm')]
 run-vm-iso variant=default_variant $tag=default_tag: && (_run-vm ("localhost/" + image_name + "-" + variant) tag "iso" "disk_config/iso.toml")
 
 # Run a virtual machine using systemd-vmspawn
-[group('Run Virtual Machine')]
+[group('run-vm')]
 spawn-vm rebuild="0" type="qcow2" ram="6G":
     #!/usr/bin/env bash
 
