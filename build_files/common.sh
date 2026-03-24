@@ -31,6 +31,7 @@ dnf5 install \
     --setopt=install_weak_deps=True \
     --enablerepo=terra,terra-extras,terra-mesa,rpmfusion-free,rpmfusion-nonfree \
     --assumeyes \
+    terminus-fonts-console \
     zsh nu \
     sarasa-gothic-fonts \
     podman-docker \
