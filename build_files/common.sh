@@ -17,7 +17,7 @@ dnf5 mark dependency --assumeyes \
     mariadb mariadb-backup mariadb-common mariadb-connector-c mariadb-connector-c-config mariadb-cracklib-password-check mariadb-errmsg mariadb-gssapi-server mariadb-server \
     ffmpeg ffmpeg-libs lame opus-tools opusfile \
     ntfs-3g ntfs-3g-libs ntfs-3g-system-compression \
-    hunspell-en-GB gocryptfs \
+    hunspell-en-GB gocryptfs cryfs \
     duf btop \
     plymouth \
     ibus virtualbox-guest-additions \
