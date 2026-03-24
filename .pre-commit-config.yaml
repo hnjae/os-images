@@ -72,3 +72,11 @@ repos:
     hooks:
       - id: yamllint
         stages: [pre-merge-commit, pre-push]
+  - repo: local
+    hooks:
+      - id: taplo-lint
+        name: taplo-lint
+        entry: taplo lint
+        language: system
+        types: [toml]
+        stages: [pre-merge-commit, pre-push]
