@@ -1,3 +1,4 @@
+export image_registry := env("IMAGE_REGISTRY", "ghcr.io/hnjae")
 export image_name := env("IMAGE_NAME", "os-images")
 export default_variant := env("DEFAULT_VARIANT", "desktop")
 export default_tag := env("DEFAULT_TAG", "latest")
@@ -20,7 +21,7 @@ check:
     prek run --hook-stage pre-merge-commit --all-files
 
 # Clean Repo
-[group('Utility')]
+[group('utility')]
 clean:
     #!/usr/bin/env bash
     set -eoux pipefail
@@ -32,13 +33,13 @@ clean:
     rm -f output/
 
 # Sudo Clean Repo
-[group('Utility')]
+[group('utility')]
 [private]
 sudo-clean:
     just sudoif just clean
 
 # sudoif bash function
-[group('Utility')]
+[group('utility')]
 [private]
 sudoif command *args:
     #!/usr/bin/env bash
@@ -54,6 +55,42 @@ sudoif command *args:
         fi
     }
     sudoif {{ command }} {{ args }}
+
+# Build locally, tag as the tracked registry ref, and switch bootc to it
+[group('bootc')]
+bootc-switch-local variant=default_variant $tag=default_tag target_image=(image_registry + "/" + image_name + "-" + variant): (build variant tag)
+    #!/usr/bin/env bash
+    set -euo pipefail
+
+    source_image="{{ image_name }}-{{ variant }}:${tag}"
+    target_image="{{ target_image }}:${tag}"
+
+    podman tag "${source_image}" "${target_image}"
+    just _rootful_load_image "{{ target_image }}" "{{ tag }}"
+    just sudoif bootc switch --transport containers-storage "${target_image}"
+
+# Build locally and immediately reboot into the new image
+[group('bootc')]
+bootc-switch-local-apply variant=default_variant $tag=default_tag target_image=(image_registry + "/" + image_name + "-" + variant): (build variant tag)
+    #!/usr/bin/env bash
+    set -euo pipefail
+
+    source_image="{{ image_name }}-{{ variant }}:${tag}"
+    target_image="{{ target_image }}:${tag}"
+
+    podman tag "${source_image}" "${target_image}"
+    just _rootful_load_image "{{ target_image }}" "{{ tag }}"
+    just sudoif bootc switch --transport containers-storage --apply "${target_image}"
+
+# Switch back to the tracked remote registry image
+[group('bootc')]
+bootc-switch-remote variant=default_variant $tag=default_tag target_image=(image_registry + "/" + image_name + "-" + variant):
+    just sudoif bootc switch "{{ target_image }}:{{ tag }}"
+
+# Show current bootc deployment status
+[group('bootc')]
+bootc-status:
+    just sudoif bootc status
 
 # Build container image
 

@@ -24,6 +24,24 @@
 just build [variant=desktop] [tag=latest]
 ```
 
+로컬에서 빠르게 검증하고 바로 부팅 대상에 반영하려면 다음 명령을 사용할 수 있다.
+
+```bash
+# 로컬 빌드 후 containers-storage 기반으로 전환
+just bootc-switch-local [variant=desktop] [tag=latest]
+
+# 로컬 빌드 후 즉시 재부팅까지 수행
+just bootc-switch-local-apply [variant=desktop] [tag=latest]
+
+# 다시 GHCR 원격 이미지를 추적하도록 복귀
+just bootc-switch-remote [variant=desktop] [tag=latest]
+
+# 현재 bootc 상태 확인
+just bootc-status
+```
+
+이 로컬 테스트 흐름은 이미지 이름을 `ghcr.io/...` 형태로 유지하되, 실제 전환은 `containers-storage` transport를 사용한다. 원격 GHCR 추적으로 돌아가려면 `bootc-switch-remote`를 실행하면 된다.
+
 ### 디스크 이미지 빌드
 
 ```bash
@@ -63,6 +81,8 @@ bootc 시스템에서 다음 명령으로 이미지를 전환할 수 있다.
 ```bash
 sudo bootc switch ghcr.io/hnjae/os-images-<variant>:latest
 ```
+
+`just bootc-switch-remote`는 위 명령을 래핑한 레시피다.
 
 ## 이미지 서명 검증
 
