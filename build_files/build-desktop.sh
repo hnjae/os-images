@@ -6,6 +6,3 @@ set -ouex pipefail
 source /ctx/common.sh
 
 ### Desktop-specific packages and settings
-
-### Remove packages
-dnf5 autoremove --assumeyes

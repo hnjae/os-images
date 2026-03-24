@@ -36,11 +36,15 @@ dnf5 install \
     podman-docker \
     ghostty
 
+### Remove packages
+dnf5 autoremove --assumeyes
+
 # Pretendard font
 PRETENDARD_VERSION=1.3.9
 curl -fsSL "https://github.com/orioncactus/pretendard/releases/download/v${PRETENDARD_VERSION}/Pretendard-${PRETENDARD_VERSION}.zip" -o /tmp/pretendard.zip
 unzip -q /tmp/pretendard.zip "public/static/*.otf" -d /tmp/pretendard
 install -Dm644 /tmp/pretendard/public/static/*.otf -t /usr/share/fonts/OTF
+rm -rf /tmp/pretendard /tmp/pretendard.zip
 
 ### System configuration
 echo "options hid_apple fnmode=2" >/etc/modprobe.d/hid_apple.conf
