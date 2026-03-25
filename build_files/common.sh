@@ -27,6 +27,8 @@ dnf5 mark dependency --assumeyes \
     webapp-manager \
     gnome-disk-utility filelight Sunshine
 
+dnf5 remove wget2 wget2-libs wget2-wget
+
 dnf5 install \
     --setopt=install_weak_deps=True \
     --enablerepo=terra,terra-extras,terra-mesa,rpmfusion-free,rpmfusion-nonfree \
@@ -35,6 +37,7 @@ dnf5 install \
     zsh nu \
     sarasa-gothic-fonts \
     podman-docker \
+    wget1 wget1-wget \
     ghostty
 
 ### Remove packages
